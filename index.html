@@ -1,11 +1,118 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<title>Quiz</title>
+<style>
+body { font-family: Arial; max-width: 600px; margin: auto; }
+h2 { margin-top: 30px; }
+.answer { display: flex; justify-content: space-between; margin: 8px 0; }
+.result { margin-left: 10px; font-weight: bold; }
+.correct { color: green; }
+.wrong { color: red; }
+button { margin-top: 20px; padding: 10px; }
+</style>
+</head>
 <body>
-<h1>Hello Quiz</h1>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<button id="actionBtn">OK</button>
+
+<div id="score"></div>
+
 <script>
+let allQuestions = [];
+let quiz = [];
+let current = 0;
+let correctCount = 0;
+let answered = false;
+
 fetch('data.json')
   .then(r => r.json())
-  .then(d => console.log(d));
+  .then(data => {
+    allQuestions = data;
+    startQuiz();
+  });
+
+function startQuiz() {
+  quiz = shuffle(allQuestions).slice(0, 20);
+  current = 0;
+  correctCount = 0;
+  loadQuestion();
+}
+
+function shuffle(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function loadQuestion() {
+  answered = false;
+  document.getElementById('actionBtn').textContent = "OK";
+  document.getElementById('score').textContent = "";
+
+  const q = quiz[current];
+  document.getElementById('question').textContent = q.question;
+
+  const answersDiv = document.getElementById('answers');
+  answersDiv.innerHTML = "";
+
+  ['a','b','c','d'].forEach((label, i) => {
+    const div = document.createElement('div');
+    div.className = "answer";
+
+    div.innerHTML = `
+      <span>(${label}) ${q.answers[i]}</span>
+      <span>
+        <input type="radio" name="answer" value="${i+1}">
+        <span class="result" id="res${i}"></span>
+      </span>
+    `;
+    answersDiv.appendChild(div);
+  });
+}
+
+document.getElementById('actionBtn').onclick = () => {
+  if (!answered) {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) return;
+
+    const answer = parseInt(selected.value);
+    const q = quiz[current];
+
+    if (answer === q.correct) {
+      correctCount++;
+      document.getElementById(`res${answer-1}`).textContent = "TRUE";
+      document.getElementById(`res${answer-1}`).className = "result correct";
+    } else {
+      document.getElementById(`res${q.correct-1}`).textContent = "TRUE";
+      document.getElementById(`res${q.correct-1}`).className = "result correct";
+
+      document.getElementById(`res${answer-1}`).textContent = "FALSE";
+      document.getElementById(`res${answer-1}`).className = "result wrong";
+    }
+
+    answered = true;
+    document.getElementById('actionBtn').textContent = "Next";
+
+  } else {
+    current++;
+
+    if (current >= quiz.length) {
+      document.getElementById('question').textContent = "Finished!";
+      document.getElementById('answers').innerHTML = "";
+      document.getElementById('actionBtn').style.display = "none";
+      document.getElementById('score').textContent =
+        `${correctCount} / ${quiz.length}`;
+      return;
+    }
+
+    loadQuestion();
+  }
+};
 </script>
+
 </body>
 </html>
