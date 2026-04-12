@@ -2,26 +2,87 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <title>Quiz</title>
+
 <style>
-body { font-family: Arial; max-width: 600px; margin: auto; }
-h2 { margin-top: 30px; }
-.answer { display: flex; justify-content: space-between; margin: 8px 0; }
-.result { margin-left: 10px; font-weight: bold; }
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #03FF98;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+#container {
+  width: 100%;
+  max-width: 900px;
+}
+
+#question {
+  text-align: center;
+  font-size: clamp(20px, 4vw, 40px);
+  margin-bottom: 30px;
+  word-wrap: break-word;
+}
+
+.answer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: clamp(16px, 3vw, 28px);
+}
+
+.answer-text {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.answer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 15px;
+}
+
+.result {
+  font-weight: bold;
+}
+
 .correct { color: green; }
 .wrong { color: red; }
-button { margin-top: 20px; padding: 10px; }
+
+button {
+  margin-top: 30px;
+  width: 100%;
+  font-size: clamp(18px, 3vw, 30px);
+  padding: 12px;
+  cursor: pointer;
+}
+
+#score {
+  margin-top: 20px;
+  text-align: center;
+  font-size: clamp(20px, 4vw, 36px);
+}
 </style>
 </head>
+
 <body>
+<div id="container">
 
 <h2 id="question"></h2>
-
 <div id="answers"></div>
-
 <button id="actionBtn">OK</button>
-
 <div id="score"></div>
+
+</div>
 
 <script>
 let allQuestions = [];
@@ -64,11 +125,11 @@ function loadQuestion() {
     div.className = "answer";
 
     div.innerHTML = `
-      <span>(${label}) ${q.answers[i]}</span>
-      <span>
+      <div class="answer-text">(${label}) ${q.answers[i]}</div>
+      <div class="answer-right">
         <input type="radio" name="answer" value="${i+1}">
         <span class="result" id="res${i}"></span>
-      </span>
+      </div>
     `;
     answersDiv.appendChild(div);
   });
