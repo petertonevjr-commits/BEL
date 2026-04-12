@@ -31,14 +31,12 @@ body {
   box-sizing: border-box;
 }
 
-/* QUESTION */
 #question {
   text-align: center;
   font-size: clamp(20px, 4vw, 40px);
   margin-bottom: 25px;
 }
 
-/* ANSWERS */
 .answer {
   display: flex;
   align-items: center;
@@ -59,13 +57,11 @@ body {
   margin-left: 15px;
 }
 
-/* BIGGER RADIO BUTTONS */
 input[type="radio"] {
   transform: scale(1.6);
   cursor: pointer;
 }
 
-/* RESULT TEXT */
 .result {
   font-weight: bold;
 }
@@ -73,17 +69,15 @@ input[type="radio"] {
 .correct { color: green; }
 .wrong { color: red; }
 
-/* BUTTON */
 button {
   display: block;
-  margin: 30px auto 0 auto;
+  margin: 20px auto 0 auto;
   font-size: clamp(18px, 3vw, 28px);
   padding: 10px 25px;
   cursor: pointer;
   width: auto;
 }
 
-/* SCORE */
 #score {
   margin-top: 20px;
   text-align: center;
@@ -97,7 +91,10 @@ button {
 
 <h2 id="question"></h2>
 <div id="answers"></div>
+
 <button id="actionBtn">OK</button>
+<button id="restartBtn">Start new quiz</button>
+
 <div id="score"></div>
 
 </div>
@@ -120,6 +117,7 @@ function startQuiz() {
   quiz = shuffle(allQuestions).slice(0, 20);
   current = 0;
   correctCount = 0;
+  document.getElementById('actionBtn').style.display = "block";
   loadQuestion();
 }
 
@@ -190,6 +188,10 @@ document.getElementById('actionBtn').onclick = () => {
 
     loadQuestion();
   }
+};
+
+document.getElementById('restartBtn').onclick = () => {
+  location.reload();
 };
 </script>
 
